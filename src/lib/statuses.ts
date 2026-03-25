@@ -13,9 +13,9 @@ export function parseStatuses(raw: string): ParsedStatus[] {
 
 export function calcAccuracy(statuses: ParsedStatus[], throws: { status: string }[]): number {
   if (throws.length === 0) return 0;
-  const weightMap = Object.fromEntries(statuses.map((s) => [s.name, s.weight]));
-  const sum = throws.reduce((acc, t) => acc + (weightMap[t.status] ?? 0), 0);
-  return Math.round((sum / throws.length) * 100);
+  const successNames = new Set(statuses.filter((s) => s.weight === 1).map((s) => s.name));
+  const hits = throws.filter((t) => successNames.has(t.status)).length;
+  return Math.round((hits / throws.length) * 100);
 }
 
 export const COLOR_CLASSES: Record<string, string> = {
