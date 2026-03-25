@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { parseStatuses } from "@/lib/statuses";
+import { parseStatuses, calcAccuracy } from "@/lib/statuses";
 import { StatsChart } from "./chart";
 
 export default async function StatsPage() {
@@ -22,23 +22,22 @@ export default async function StatsPage() {
   const chartData = sessions.map((s) => {
     const statuses = parseStatuses(s.statuses);
     const total = s.throws.length;
-    const hits = s.throws.filter((t) => t.status === statuses[0]?.name).length;
+    const accuracy = calcAccuracy(statuses, s.throws);
     return {
       name: s.name,
       date: s.createdAt.toISOString().slice(0, 10),
-      accuracy: total > 0 ? Math.round((hits / total) * 100) : 0,
+      accuracy,
       total,
-      hits,
     };
   });
 
-  const allThrows = sessions.flatMap((s) => s.throws);
-  const totalThrows = allThrows.length;
-  const totalHits = sessions.reduce((acc, s) => {
-    const first = parseStatuses(s.statuses)[0]?.name;
-    return acc + s.throws.filter((t) => t.status === first).length;
+  const totalThrows = sessions.reduce((a, s) => a + s.throws.length, 0);
+  const allParsed = sessions.map((s) => ({ statuses: parseStatuses(s.statuses), throws: s.throws }));
+  const weightedSum = allParsed.reduce((acc, { statuses, throws }) => {
+    const wm = Object.fromEntries(statuses.map((s) => [s.name, s.weight]));
+    return acc + throws.reduce((a, t) => a + (wm[t.status] ?? 0), 0);
   }, 0);
-  const overallAccuracy = totalThrows > 0 ? Math.round((totalHits / totalThrows) * 100) : 0;
+  const overallAccuracy = totalThrows > 0 ? Math.round((weightedSum / totalThrows) * 100) : 0;
 
   return (
     <div className="flex-1 flex flex-col max-w-lg mx-auto w-full p-4 space-y-6">
@@ -74,7 +73,7 @@ export default async function StatsPage() {
             </div>
             <div className="text-right">
               <div className="font-bold">{d.accuracy}%</div>
-              <div className="text-gray-400">{d.hits}/{d.total}</div>
+              <div className="text-gray-400">{d.accuracy}% su {d.total}</div>
             </div>
           </div>
         ))}

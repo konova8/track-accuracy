@@ -1,6 +1,6 @@
 "use client";
 
-type DataPoint = { name: string; date: string; accuracy: number; total: number; hits: number };
+type DataPoint = { name: string; date: string; accuracy: number; total: number };
 
 export function StatsChart({ data }: { data: DataPoint[] }) {
   if (data.length === 0) return <p className="text-gray-500 text-center">Nessun dato ancora.</p>;

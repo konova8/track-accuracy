@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { parseStatuses } from "@/lib/statuses";
+import { parseStatuses, calcAccuracy } from "@/lib/statuses";
 import { ThrowTracker, DeleteSessionButton } from "./tracker";
 
 export default async function SessionPage({ params }: { params: Promise<{ id: string }> }) {
@@ -29,8 +29,7 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
   const counts: Record<string, number> = {};
   statuses.forEach((s) => (counts[s.name] = myThrows.filter((t) => t.status === s.name).length));
   const total = myThrows.length;
-  const hitCount = counts[statuses[0]?.name] || 0;
-  const accuracy = total > 0 ? Math.round((hitCount / total) * 100) : 0;
+  const accuracy = calcAccuracy(statuses, myThrows);
   const isOwner = session.ownerId === userId;
 
   return (
