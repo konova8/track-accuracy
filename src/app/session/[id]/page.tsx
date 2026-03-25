@@ -70,6 +70,10 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
       </div>
 
       {isOwner && <DeleteSessionButton sessionId={session.id} />}
+
+      <Link href={`/session/${session.id}/stats`} className="block text-center p-3 rounded-lg bg-gray-800 border border-gray-700 font-semibold">
+        📊 Statistiche sessione
+      </Link>
     </div>
   );
 }

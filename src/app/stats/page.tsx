@@ -25,6 +25,7 @@ export default async function StatsPage() {
     const total = s.throws.length;
     const accuracy = calcAccuracy(statuses, s.throws);
     return {
+      id: s.id,
       name: s.name,
       date: s.createdAt.toISOString().slice(0, 10),
       accuracy,
@@ -80,8 +81,8 @@ export default async function StatsPage() {
 
       <div className="space-y-2">
         <h2 className="font-semibold">Dettaglio sessioni</h2>
-        {chartData.map((d, i) => (
-          <div key={i} className="flex justify-between p-3 rounded-lg bg-gray-800 text-sm">
+        {chartData.map((d) => (
+          <Link key={d.id} href={`/session/${d.id}/stats`} className="flex justify-between p-3 rounded-lg bg-gray-800 text-sm">
             <div>
               <div className="font-semibold">{d.name}</div>
               <div className="text-gray-400">{d.date}</div>
@@ -90,7 +91,7 @@ export default async function StatsPage() {
               <div className="font-bold">{d.accuracy}%</div>
               <div className="text-gray-400">{d.accuracy}% su {d.total}</div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
