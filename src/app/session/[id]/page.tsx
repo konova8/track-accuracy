@@ -40,32 +40,23 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
         <span className="text-xs bg-gray-700 px-2 py-1 rounded">{session.shareCode}</span>
       </div>
 
-      <div className="text-center space-y-1">
-        <div className="text-5xl font-bold">{accuracy}%</div>
-        <div className="text-gray-400">{total} tiri totali</div>
-        <div className="flex justify-center gap-4 text-sm">
-          {statuses.map((s) => (
-            <span key={s.name}>{s.name}: {counts[s.name] || 0}</span>
-          ))}
-        </div>
-      </div>
-
-      <ThrowTracker sessionId={session.id} statuses={statuses} />
+      <ThrowTracker
+        sessionId={session.id}
+        statuses={statuses}
+        initialCounts={counts}
+        initialTotal={total}
+        initialAccuracy={accuracy}
+        initialThrows={myThrows.slice(0, 20).map((t) => ({
+          id: t.id,
+          status: t.status,
+          time: t.createdAt.toISOString(),
+        }))}
+      />
 
       <div className="space-y-1">
         <h3 className="text-sm font-semibold text-gray-400">Partecipanti</h3>
         {session.members.map((m) => (
           <div key={m.id} className="text-sm">{m.user.name || m.user.email}</div>
-        ))}
-      </div>
-
-      <div className="space-y-1">
-        <h3 className="text-sm font-semibold text-gray-400">Ultimi tiri</h3>
-        {myThrows.slice(0, 20).map((t) => (
-          <div key={t.id} className="text-xs text-gray-500 flex justify-between">
-            <span>{t.status}</span>
-            <span>{new Date(t.createdAt).toLocaleTimeString("it-IT")}</span>
-          </div>
         ))}
       </div>
 
