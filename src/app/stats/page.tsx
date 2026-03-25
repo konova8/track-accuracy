@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { parseStatuses, calcAccuracy } from "@/lib/statuses";
 import { StatsChart } from "./chart";
+import { ThrowsChart } from "./throws-chart";
 
 export default async function StatsPage() {
   const authSession = await auth();
@@ -39,6 +40,18 @@ export default async function StatsPage() {
   }, 0);
   const overallAccuracy = totalThrows > 0 ? Math.round((weightedSum / totalThrows) * 100) : 0;
 
+  // Individual throws for the throws timeline chart
+  const throwsData = sessions.flatMap((s) => {
+    const statuses = parseStatuses(s.statuses);
+    const colorMap = Object.fromEntries(statuses.map((st) => [st.name, st.color]));
+    return s.throws.map((t) => ({
+      status: t.status,
+      color: colorMap[t.status] || "gray",
+      time: t.createdAt.toISOString(),
+      session: s.name,
+    }));
+  });
+
   return (
     <div className="flex-1 flex flex-col max-w-lg mx-auto w-full p-4 space-y-6">
       <div className="flex items-center gap-2">
@@ -62,6 +75,8 @@ export default async function StatsPage() {
       </div>
 
       <StatsChart data={chartData} />
+
+      <ThrowsChart data={throwsData} />
 
       <div className="space-y-2">
         <h2 className="font-semibold">Dettaglio sessioni</h2>
