@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { parseStatuses, calcAccuracy } from "@/lib/statuses";
-import { ThrowTracker, DeleteSessionButton } from "./tracker";
+import { ThrowTracker, DeleteSessionButton, SessionName } from "./tracker";
 
 export default async function SessionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -36,8 +36,8 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
     <div className="flex-1 flex flex-col max-w-lg mx-auto w-full p-4 space-y-6">
       <div className="flex items-center gap-2">
         <Link href="/" className="text-2xl">←</Link>
-        <h1 className="text-xl font-bold flex-1">{session.name}</h1>
-        <span className="text-xs bg-gray-700 px-2 py-1 rounded">{session.shareCode}</span>
+        <SessionName sessionId={session.id} name={session.name} isOwner={isOwner} />
+        <span className="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">{session.shareCode}</span>
       </div>
 
       <ThrowTracker
@@ -54,7 +54,7 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
       />
 
       <div className="space-y-1">
-        <h3 className="text-sm font-semibold text-gray-400">Partecipanti</h3>
+        <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Partecipanti</h3>
         {session.members.map((m) => (
           <div key={m.id} className="text-sm">{m.user.name || m.user.email}</div>
         ))}
@@ -62,7 +62,7 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
 
       {isOwner && <DeleteSessionButton sessionId={session.id} />}
 
-      <Link href={`/session/${session.id}/stats`} className="block text-center p-3 rounded-lg bg-gray-800 border border-gray-700 font-semibold">
+      <Link href={`/session/${session.id}/stats`} className="block text-center p-3 rounded-lg bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 font-semibold">
         📊 Statistiche sessione
       </Link>
     </div>

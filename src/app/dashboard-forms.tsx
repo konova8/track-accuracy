@@ -54,28 +54,28 @@ export function CreateSessionForm() {
 
   if (!open)
     return (
-      <button onClick={() => setOpen(true)} className="w-full p-3 rounded-lg bg-blue-600 font-semibold">
+      <button onClick={() => setOpen(true)} className="w-full p-3 rounded-lg bg-blue-600 text-white font-semibold">
         + Nuova sessione
       </button>
     );
 
   return (
-    <form action={handleCreate} className="space-y-3 p-4 rounded-lg bg-gray-800 border border-gray-700">
-      <input name="name" placeholder="Nome sessione" required className="w-full p-2 rounded bg-gray-900 border border-gray-600" />
+    <form action={handleCreate} className="space-y-3 p-4 rounded-lg bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+      <input name="name" placeholder="Nome sessione" required className="w-full p-2 rounded bg-white border border-gray-300 dark:bg-gray-900 dark:border-gray-600" />
 
       <div className="space-y-3">
-        <label className="text-sm text-gray-400">Stati</label>
+        <label className="text-sm text-gray-500 dark:text-gray-400">Stati</label>
         {statuses.map((s, i) => (
-          <div key={i} className="space-y-1 p-2 rounded bg-gray-900 border border-gray-700">
+          <div key={i} className="space-y-1 p-2 rounded bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-700">
             <div className="flex items-center gap-2">
               <input
                 value={s.name}
                 onChange={(e) => update(i, "name", e.target.value)}
                 placeholder="Nome stato"
-                className="flex-1 p-2 rounded bg-gray-800 border border-gray-600 text-sm"
+                className="flex-1 p-2 rounded bg-gray-50 border border-gray-300 dark:bg-gray-800 dark:border-gray-600 text-sm"
               />
               {statuses.length > 1 && (
-                <button type="button" onClick={() => removeStatus(i)} className="text-red-400 text-lg px-1">×</button>
+                <button type="button" onClick={() => removeStatus(i)} className="text-red-500 dark:text-red-400 text-lg px-1">×</button>
               )}
             </div>
             <div className="flex items-center gap-1">
@@ -84,18 +84,18 @@ export function CreateSessionForm() {
                   key={c.value}
                   type="button"
                   onClick={() => update(i, "color", c.value)}
-                  className={`w-7 h-7 rounded text-sm ${s.color === c.value ? "ring-2 ring-white" : "opacity-40"}`}
+                  className={`w-7 h-7 rounded text-sm ${s.color === c.value ? "ring-2 ring-gray-900 dark:ring-white" : "opacity-40"}`}
                 >
                   {c.label}
                 </button>
               ))}
-              <span className="mx-1 text-gray-600">|</span>
+              <span className="mx-1 text-gray-400 dark:text-gray-600">|</span>
               {WEIGHTS.map((w) => (
                 <button
                   key={w.value}
                   type="button"
                   onClick={() => update(i, "weight", w.value)}
-                  className={`px-2 py-1 rounded text-xs ${s.weight === w.value ? "bg-gray-600 ring-1 ring-white" : "bg-gray-800 opacity-50"}`}
+                  className={`px-2 py-1 rounded text-xs ${s.weight === w.value ? "bg-gray-300 ring-1 ring-gray-900 dark:bg-gray-600 dark:ring-white" : "bg-gray-100 opacity-50 dark:bg-gray-800"}`}
                 >
                   {w.label}
                 </button>
@@ -103,12 +103,12 @@ export function CreateSessionForm() {
             </div>
           </div>
         ))}
-        <button type="button" onClick={addStatus} className="text-sm text-blue-400">+ Aggiungi stato</button>
+        <button type="button" onClick={addStatus} className="text-sm text-blue-600 dark:text-blue-400">+ Aggiungi stato</button>
       </div>
 
       <div className="flex gap-2">
-        <button type="submit" className="flex-1 p-2 rounded bg-blue-600 font-semibold">Crea</button>
-        <button type="button" onClick={() => setOpen(false)} className="p-2 rounded bg-gray-700">Annulla</button>
+        <button type="submit" className="flex-1 p-2 rounded bg-blue-600 text-white font-semibold">Crea</button>
+        <button type="button" onClick={() => setOpen(false)} className="p-2 rounded bg-gray-200 dark:bg-gray-700">Annulla</button>
       </div>
     </form>
   );
@@ -124,8 +124,8 @@ export function JoinSessionForm() {
 
   return (
     <form action={handleJoin} className="flex gap-2">
-      <input name="code" placeholder="Codice sessione" required className="flex-1 p-3 rounded-lg bg-gray-800 border border-gray-700" />
-      <button type="submit" className="p-3 rounded-lg bg-green-600 font-semibold">Unisciti</button>
+      <input name="code" placeholder="Codice sessione" required className="flex-1 p-3 rounded-lg bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-700" />
+      <button type="submit" className="p-3 rounded-lg bg-green-600 text-white font-semibold">Unisciti</button>
     </form>
   );
 }

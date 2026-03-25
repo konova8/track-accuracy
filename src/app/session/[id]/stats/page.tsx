@@ -44,19 +44,19 @@ export default async function SessionStatsPage({ params }: { params: Promise<{ i
       </div>
 
       <div className="grid grid-cols-2 gap-3 text-center">
-        <div className="p-3 rounded-lg bg-gray-800">
+        <div className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800">
           <div className="text-3xl font-bold">{accuracy}%</div>
-          <div className="text-xs text-gray-400">Accuracy</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">Accuracy</div>
         </div>
-        <div className="p-3 rounded-lg bg-gray-800">
+        <div className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800">
           <div className="text-3xl font-bold">{myThrows.length}</div>
-          <div className="text-xs text-gray-400">Tiri totali</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">Tiri totali</div>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-2">
         {statuses.map((s) => (
-          <div key={s.name} className="flex justify-between p-2 rounded-lg bg-gray-800 text-sm">
+          <div key={s.name} className="flex justify-between p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm">
             <span>{s.name}</span>
             <span className="font-bold">{counts[s.name] || 0}</span>
           </div>

@@ -17,8 +17,8 @@ export function StatsChart({ data }: { data: DataPoint[] }) {
   const line = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
 
   return (
-    <div className="bg-gray-800 rounded-lg p-3">
-      <h3 className="text-sm font-semibold text-gray-400 mb-2">Accuracy nel tempo</h3>
+    <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3">
+      <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">Accuracy nel tempo</h3>
       <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
         {[0, 25, 50, 75, 100].map((v) => {
           const y = pad + (1 - v / maxY) * (h - pad * 2);

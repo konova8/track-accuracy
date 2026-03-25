@@ -72,3 +72,12 @@ export async function deleteSession(sessionId: string) {
   await prisma.session.delete({ where: { id: sessionId } });
   revalidatePath("/");
 }
+
+export async function renameSession(sessionId: string, name: string) {
+  const userId = await getUser();
+  const session = await prisma.session.findUnique({ where: { id: sessionId } });
+  if (session?.ownerId !== userId) throw new Error("Non autorizzato");
+  await prisma.session.update({ where: { id: sessionId }, data: { name } });
+  revalidatePath(`/session/${sessionId}`, "page");
+  revalidatePath("/");
+}

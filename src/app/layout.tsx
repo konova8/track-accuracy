@@ -17,8 +17,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="it" className={`${geist.variable} h-full`}>
-      <body className="min-h-full bg-gray-950 text-white font-sans flex flex-col">
+    <html lang="it" className={`${geist.variable} h-full`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.classList.add("dark")}catch(e){}})()` }} />
+      </head>
+      <body className="min-h-full bg-white text-gray-900 dark:bg-gray-950 dark:text-white font-sans flex flex-col">
         {children}
       </body>
     </html>

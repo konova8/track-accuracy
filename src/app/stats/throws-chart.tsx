@@ -51,13 +51,13 @@ export function ThrowsChart({ data }: { data: ThrowPoint[] }) {
   }, []);
 
   return (
-    <div className="bg-gray-800 rounded-lg p-3 space-y-2">
+    <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 space-y-2">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-400">Andamento tiri</h3>
+        <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Andamento tiri</h3>
         <div className="flex gap-1">
-          <button onClick={() => setZoom((z) => Math.max(0.5, z / 1.5))} className="px-2 py-0.5 text-xs bg-gray-700 rounded">−</button>
+          <button onClick={() => setZoom((z) => Math.max(0.5, z / 1.5))} className="px-2 py-0.5 text-xs bg-gray-200 dark:bg-gray-700 rounded">−</button>
           <span className="text-xs text-gray-500 px-1">{Math.round(zoom * 100)}%</span>
-          <button onClick={() => setZoom((z) => Math.min(5, z * 1.5))} className="px-2 py-0.5 text-xs bg-gray-700 rounded">+</button>
+          <button onClick={() => setZoom((z) => Math.min(5, z * 1.5))} className="px-2 py-0.5 text-xs bg-gray-200 dark:bg-gray-700 rounded">+</button>
         </div>
       </div>
       <div
