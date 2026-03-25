@@ -2,7 +2,8 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ThrowTracker } from "./tracker";
+import { parseStatuses } from "@/lib/statuses";
+import { ThrowTracker, DeleteSessionButton } from "./tracker";
 
 export default async function SessionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -19,17 +20,18 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
 
   if (!session) redirect("/");
 
-  const isMember = session.members.some((m) => m.userId === authSession.user!.id);
+  const userId = authSession.user.id;
+  const isMember = session.members.some((m) => m.userId === userId);
   if (!isMember) redirect("/");
 
-  const userId = authSession.user.id;
-  const statuses = session.statuses.split(",").map((s) => s.trim());
+  const statuses = parseStatuses(session.statuses);
   const myThrows = session.throws.filter((t) => t.userId === userId);
   const counts: Record<string, number> = {};
-  statuses.forEach((s) => (counts[s] = myThrows.filter((t) => t.status === s).length));
+  statuses.forEach((s) => (counts[s.name] = myThrows.filter((t) => t.status === s.name).length));
   const total = myThrows.length;
-  const hitCount = counts[statuses[0]] || 0;
+  const hitCount = counts[statuses[0]?.name] || 0;
   const accuracy = total > 0 ? Math.round((hitCount / total) * 100) : 0;
+  const isOwner = session.ownerId === userId;
 
   return (
     <div className="flex-1 flex flex-col max-w-lg mx-auto w-full p-4 space-y-6">
@@ -44,7 +46,7 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
         <div className="text-gray-400">{total} tiri totali</div>
         <div className="flex justify-center gap-4 text-sm">
           {statuses.map((s) => (
-            <span key={s}>{s}: {counts[s] || 0}</span>
+            <span key={s.name}>{s.name}: {counts[s.name] || 0}</span>
           ))}
         </div>
       </div>
@@ -67,6 +69,8 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
           </div>
         ))}
       </div>
+
+      {isOwner && <DeleteSessionButton sessionId={session.id} />}
     </div>
   );
 }

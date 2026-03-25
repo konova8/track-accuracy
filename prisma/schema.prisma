@@ -23,7 +23,7 @@ model Session {
   createdAt DateTime        @default(now())
   ownerId   String
   shareCode String          @unique
-  statuses  String          @default("Hit,Miss") // comma-separated configurable statuses
+  statuses  String          @default("Hit:green,Miss:red") // "name:color,name:color"
   owner     User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   members   SessionMember[]
   throws    Throw[]

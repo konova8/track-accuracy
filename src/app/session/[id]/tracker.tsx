@@ -1,23 +1,21 @@
 "use client";
 
-import { recordThrow, undoLastThrow } from "@/lib/actions/session";
+import { recordThrow, undoLastThrow, deleteSession } from "@/lib/actions/session";
+import { useRouter } from "next/navigation";
+import type { ParsedStatus } from "@/lib/statuses";
+import { COLOR_CLASSES } from "@/lib/statuses";
 
-const colors: Record<number, string> = {
-  0: "bg-green-600 active:bg-green-700",
-  1: "bg-red-600 active:bg-red-700",
-};
-
-export function ThrowTracker({ sessionId, statuses }: { sessionId: string; statuses: string[] }) {
+export function ThrowTracker({ sessionId, statuses }: { sessionId: string; statuses: ParsedStatus[] }) {
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-3">
-        {statuses.map((status, i) => (
+        {statuses.map((s) => (
           <button
-            key={status}
-            onClick={() => recordThrow(sessionId, status)}
-            className={`p-6 rounded-xl text-xl font-bold ${colors[i] || "bg-gray-600 active:bg-gray-700"}`}
+            key={s.name}
+            onClick={() => recordThrow(sessionId, s.name)}
+            className={`p-6 rounded-xl text-xl font-bold ${COLOR_CLASSES[s.color] || COLOR_CLASSES.gray}`}
           >
-            {status}
+            {s.name}
           </button>
         ))}
       </div>
@@ -28,5 +26,21 @@ export function ThrowTracker({ sessionId, statuses }: { sessionId: string; statu
         ↩ Annulla ultimo
       </button>
     </div>
+  );
+}
+
+export function DeleteSessionButton({ sessionId }: { sessionId: string }) {
+  const router = useRouter();
+
+  async function handleDelete() {
+    if (!confirm("Sei sicuro di voler eliminare questa sessione?")) return;
+    await deleteSession(sessionId);
+    router.push("/");
+  }
+
+  return (
+    <button onClick={handleDelete} className="w-full p-2 rounded-lg bg-red-900 border border-red-700 text-sm text-red-300">
+      🗑 Elimina sessione
+    </button>
   );
 }

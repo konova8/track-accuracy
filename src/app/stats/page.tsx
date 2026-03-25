@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { parseStatuses } from "@/lib/statuses";
 import { StatsChart } from "./chart";
 
 export default async function StatsPage() {
@@ -19,9 +20,9 @@ export default async function StatsPage() {
   });
 
   const chartData = sessions.map((s) => {
-    const statuses = s.statuses.split(",").map((st) => st.trim());
+    const statuses = parseStatuses(s.statuses);
     const total = s.throws.length;
-    const hits = s.throws.filter((t) => t.status === statuses[0]).length;
+    const hits = s.throws.filter((t) => t.status === statuses[0]?.name).length;
     return {
       name: s.name,
       date: s.createdAt.toISOString().slice(0, 10),
@@ -34,7 +35,7 @@ export default async function StatsPage() {
   const allThrows = sessions.flatMap((s) => s.throws);
   const totalThrows = allThrows.length;
   const totalHits = sessions.reduce((acc, s) => {
-    const first = s.statuses.split(",")[0].trim();
+    const first = parseStatuses(s.statuses)[0]?.name;
     return acc + s.throws.filter((t) => t.status === first).length;
   }, 0);
   const overallAccuracy = totalThrows > 0 ? Math.round((totalHits / totalThrows) * 100) : 0;
